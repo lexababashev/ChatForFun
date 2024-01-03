@@ -1,0 +1,138 @@
+
+.mainSettings{
+  display: flex;
+  justify-content: center;
+}
+
+input{
+  cursor: pointer;
+}
+
+.setting label {
+  display: flex;
+  align-items: center;
+}
+
+
+.formWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 28px;
+
+  width: 940px;
+  margin: 30px;
+  margin-bottom: 0;
+  padding: 30px;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+
+@media screen and (max-width: 767px) {
+  .formWrapper {
+    width: 700px;
+    gap: 14px;
+  }
+}
+
+.setting {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 21px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 77px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(48px);
+  -ms-transform: translateX(48px);
+  transform: translateX(48px);
+}
+
+.slider.round {
+  border-radius: 28px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.timeInput {
+  padding: 3px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: none;
+  background-color: #2196F3;
+  outline: none;
+}
+
+.timeInput:focus {
+  background-color: #88c5f7;
+}
+
+
+.batteryInp {
+  display: flex;
+  flex-direction: column;
+  width: 90px;
+  height: 30px;
+}
+
+.batteryInput {
+  padding: 5px 10px;
+  width: 55px;
+  font-size: 16px;
+  border-radius: 7px;
+  border: none;
+  background-color: #2196F3;
+  outline: none;
+}
+
+.batteryInput:focus {
+  background-color: #88c5f7;
+}

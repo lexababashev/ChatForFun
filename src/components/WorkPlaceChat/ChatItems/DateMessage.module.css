@@ -1,0 +1,78 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  padding-bottom: 3px;
+}
+
+.dateMessage {
+  position: relative;
+
+  padding: 3px 34px;
+  align-self: center;
+  border-radius: 6px;
+  background: #DBDFEB;
+  font-weight: 500;
+  font-family: Arial, sans-serif;
+  box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.3);
+}
+
+
+.dateMessage.dark {
+  background: #171717E5;
+  color: #A0A0A0;
+}
+
+.popup_buttons {
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+
+
+  display: flex;
+  gap: 2px;
+  align-self: center;
+
+
+  background-color: rgb(136, 134, 134);
+  padding: 3px;
+  border-radius: 10px;
+}
+
+
+.ed {
+  height: 25px;
+  width: 25px;
+  border: 0;
+  cursor: pointer;
+  border-radius: 100%;
+  padding: 3px;
+  background-color: rgb(40, 190, 254);
+
+}
+
+.ans {
+  height: 25px;
+  width: 25px;
+  border: 0;
+  cursor: pointer;
+
+  padding: 3px;
+  background-color: rgb(61, 244, 189);
+  border-radius: 100%;
+}
+
+.del {
+  height: 25px;
+  width: 25px;
+  border: 0;
+  cursor: pointer;
+  border-radius: 100%;
+  padding: 1px;
+  background-color: rgb(247, 36, 145);
+
+
+}

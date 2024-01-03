@@ -1,0 +1,47 @@
+h3,
+p {
+  margin: 0;
+}
+
+.container{
+width: 400px;
+
+display: flex;
+flex-direction: column;
+}
+.header{
+  width: 100%;
+  height: 86px;
+  background-image: url('../../assets/icons/header.png');
+  background-position: center;
+  background-size: cover;
+}
+.chatbackground {
+  width: 100%;
+  min-height: 700px;
+  background-image: url('../../assets/icons/image 4.svg');
+  background-position: center;
+  background-size: cover;
+}
+
+.chatbackground.darkC {
+  background-image: url('../../assets/icons/image 6.svg');
+}
+
+.footerbutton {
+  width: 100%;
+  height: 80px;
+  background-image: url('../../assets/icons/footer.png');
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+  border: 0;
+}
+.header.darkH {
+  background-image: url('../../assets/icons/headerDark.png');
+}
+
+
+.footerbutton.darkB {
+  background-image: url('../../assets/icons/footerDark.png');
+}

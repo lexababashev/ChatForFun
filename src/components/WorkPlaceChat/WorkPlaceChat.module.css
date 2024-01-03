@@ -1,0 +1,44 @@
+
+.maincontainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 800px;
+    padding: 70px;
+    margin: 20px;
+    background-color:rgb(60, 170, 248);
+    border-radius: 20px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 1, 1);
+  }
+  
+
+  @media screen and (max-width: 767px) {
+    .container {
+      width: 720px;
+    }
+  }
+  
+
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+    .container {
+      width: 940px;
+
+    }
+  }
+  
+
+  @media screen and (min-width: 1024px) {
+    .container {
+      width: 940px;
+
+    }
+  }
+  
+  

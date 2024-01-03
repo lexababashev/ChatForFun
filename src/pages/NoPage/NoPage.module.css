@@ -1,0 +1,30 @@
+.container {
+    width: 100%;
+    text-align: center;
+}
+
+.noPageTitle {
+    font-size: 40px;
+
+
+}
+
+.noPageSubtitle {
+    font-size: 28px;
+
+}
+
+.buttonBack {
+    width: 50%;
+    margin: 50px auto;
+    font-size: 50px;
+    font-weight: bold;
+    background-color: black;
+    color: aliceblue;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.link {
+    width: 100%;
+}

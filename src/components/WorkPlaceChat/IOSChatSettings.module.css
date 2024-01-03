@@ -1,0 +1,98 @@
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.number_of_messages {
+    background: none;
+    border: none;
+    height: 21px;
+    max-width: 38px;
+    outline: none;
+    margin-top: 22px;
+    margin-left: 28px;
+    color: #007AFF;
+    font-family: Arial, sans-serif;
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    cursor: text;
+}
+
+.number_of_messages:focus {
+    color: white;
+    background-color: #007AFF;
+    border-radius: 3px;
+}
+
+.user_avatar {
+    margin-left: 12px;
+    margin-top: 12px;
+}
+
+.user_avatar_button {
+    width: 42px;
+    height: 42px;
+    border-radius: 100%;
+    border: 0;
+    cursor: pointer;
+    background: #898989;
+}
+
+.user_data {
+    display: flex;
+    flex-direction: column;
+    margin-left: 7px;
+}
+
+.inputName {
+    margin-top: 12px;
+    background: none;
+    border: none;
+    color: #000000;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    max-width: 175px;
+    outline: none;
+    cursor: text;
+}
+
+.inputName:focus {
+    color: white;
+    background-color: #007AFF;
+    border-radius: 3px;
+}
+
+
+
+
+.inputName.DarkName {
+    color: #ffffff;
+}
+
+.inputStatus {
+    background: none;
+    border: none;
+    max-width: 150px;
+    outline: none;
+    margin-top: 3px;
+    color: #898989;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.024px;
+    cursor: text;
+}
+
+.inputStatus:focus {
+    color: white;
+    background-color: #007AFF;
+    border-radius: 3px;
+}
