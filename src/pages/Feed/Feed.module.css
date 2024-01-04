@@ -1,0 +1,238 @@
+.container {
+    display: flex;
+    margin: 20px;
+    gap: 20px;
+    background-color: #f0f4f8;
+}
+
+.deleteButton {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.deleteButton:hover {
+    background-color: #ff3333;
+}
+
+.leftBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.searchContainer input {
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: 1px solid grey;
+    width: 500px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cardsList {
+    display: flex;
+    /*flex-direction: column;*/
+    align-items: flex-start;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.cardsListAllUsers {
+    flex-direction: column;
+}
+
+.cardsListMyProfile {
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.leftBlock,
+.rightBlock {
+    flex: 1;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 20px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.image {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    background-color: #e3f2fd;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.userImage {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #2196f3;
+}
+
+.userName {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+}
+
+.filterContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.filterContainer select {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    outline: none;
+    cursor: pointer;
+}
+
+.filterContainer select:hover,
+.filterContainer select:focus {
+    border-color: #007bff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.filterContainer select:active {
+    transform: scale(0.98);
+}
+
+.dropdownContainer {
+    position: relative;
+    width: 200px; /* Adjust as needed */
+    cursor: pointer;
+}
+
+.dropdownHeader {
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dropdownList {
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    z-index: 1000;
+}
+
+.dropdownItem {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.activeDropdownItem span {
+    text-decoration: underline;
+}
+
+.dropdownItem:hover {
+    background-color: #f8f8f8;
+}
+
+.userImage {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.userName {
+    flex-grow: 1;
+}
+
+.loginMessage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Use the full viewport height */
+    font-size: 1.5rem;
+    color: #333; /* A dark gray text color */
+    background-color: #f2f2f2; /* A light gray background */
+    border-radius: 8px;
+    margin: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+
+.likeSection {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.likeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #333;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.likeButton:hover {
+    color: #007bff;
+}
+
+.likeIcon {
+    margin-right: 5px;
+}
+
+.likeCount {
+    margin-left: 5px;
+    font-size: 14px;
+    color: #777;
+}

@@ -1,11 +1,13 @@
 import styles from './IOSChatSettings.module.css'
-import React from 'react';
+import React, {useState} from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { changeName, changeStatus, changeNumberOfMessages } from '../../reducers/settingsReducer';
+import {useDispatch, useSelector} from 'react-redux';
+import {changeName, changeStatus, changeNumberOfMessages} from '../../reducers/settingsReducer';
 
 const IOSChatSettings = () => {
     const dispatch = useDispatch();
+    const [selectedImage, setSelectedImage] = useState(null);
+
 
     const userName = useSelector((state) => state.settings.name);
     const userStatus = useSelector((state) => state.settings.status);
@@ -32,14 +34,12 @@ const IOSChatSettings = () => {
         let sanitizedInput = event.target.value;
         if (/\D/g.test(sanitizedInput.toString())) {
             return;
-        }
-        else if (sanitizedInput.startsWith('00')) {
+        } else if (sanitizedInput.startsWith('00')) {
             return;
 
         } else if (sanitizedInput.startsWith('0') && sanitizedInput.length > 1) {
             return;
-        }
-        else if (sanitizedInput.length > 3) {
+        } else if (sanitizedInput.length > 3) {
             return;
         }
         dispatch(changeNumberOfMessages(sanitizedInput));
@@ -58,21 +58,14 @@ const IOSChatSettings = () => {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                const button = document.querySelector('.user_avatar');
-                if (button) {
-                    button.style.backgroundImage = `url(${reader.result})`;
-                    button.style.backgroundSize = 'cover';
-                }
+                setSelectedImage(reader.result);
             };
             reader.readAsDataURL(file);
         }
     };
 
     const handleClick = () => {
-        const fileInput = document.getElementById('fileInput');
-        if (fileInput) {
-            fileInput.click();
-        }
+        document.getElementById("fileInput").click();
     };
 
 
@@ -92,12 +85,16 @@ const IOSChatSettings = () => {
                     id="fileInput"
                     type="file"
                     accept="image/*"
-                    style={{ display: 'none' }}
+                    style={{display: 'none'}}
                     onChange={handleImageUpload}
                 />
                 <button
-                    className={styles.user_avatar_button}
+                    className={`${styles.user_avatar_button} user-avatar`}
                     onClick={handleClick}
+                    style={{
+                        backgroundImage: selectedImage ? `url(${selectedImage})` : "none",
+                        backgroundSize: 'cover'
+                    }}
                 ></button>
             </div>
 

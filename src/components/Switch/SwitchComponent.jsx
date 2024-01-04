@@ -1,39 +1,36 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import styles from './SwitchComponent.module.css';
 
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import {BrowserRouter as Router, Link, useLocation} from 'react-router-dom';
 
 
 const SwitchComponent = () => {
-  const [currentPage, setCurrentPage] = useState('Constructor');
+    const location = useLocation();
 
-  const handlePageChange = (pageName) => {
-    setCurrentPage(pageName);
-  };
+    const isConstructorPageSelected = location.pathname === '/';
+    const isFeedPageSelected = location.pathname === '/feed'
 
-  return (
-    <div className={styles.container}>
+    return (
+        <div className={styles.container}>
 
-      <Link to="/" className={styles.link}>
-        <button
-          onClick={() => handlePageChange('Constructor')}
-          className={`${styles.button} ${currentPage === 'Constructor' ? styles.active : ''}`}
-        >
-          <span>Constructor</span>
-        </button>
-      </Link>
+            <Link to="/" className={styles.link}>
+                <button
+                    className={`${styles.button} ${isConstructorPageSelected ? styles.active : ''}`}
+                >
+                    <span>Constructor</span>
+                </button>
+            </Link>
 
-      <Link to="/feed" className={styles.link}>
-        <button
-          onClick={() => handlePageChange('Feed')}
-          className={`${styles.button} ${currentPage === 'Feed' ? styles.active : ''}`}
-        >
-          <span>Feed</span>
-        </button>
-      </Link>
+            <Link to="/feed" className={styles.link}>
+                <button
+                    className={`${styles.button} ${isFeedPageSelected ? styles.active : ''}`}
+                >
+                    <span>Feed</span>
+                </button>
+            </Link>
 
-    </div>
-  );
+        </div>
+    );
 };
 
 export default SwitchComponent;

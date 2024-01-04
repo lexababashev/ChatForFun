@@ -1,5 +1,5 @@
 
-.container{
+.container {
     width: 100%;
     height: 100px;
     display: flex;
@@ -9,30 +9,30 @@
 }
 
 
-.buttonD{
-width: 280px;
-padding: 0 7px;
-margin: 14px;
-background-color: aqua;
-color: black;
-font-weight: bold;
-font-size: 21px;
-border-radius: 10px;
-border: 0;
+.buttonD {
+    cursor: pointer;
+    width: 280px;
+    padding: 0 7px;
+    margin: 14px;
+    background-color: aqua;
+    color: black;
+    font-weight: bold;
+    font-size: 21px;
+    border-radius: 10px;
+    border: 0;
 }
 
 
 .buttonD:hover {
     background-color: #2980b9;
     color: azure;
-  }
+}
 
 @media screen and (max-width: 767px) {
 
-    .buttonD{
-font-size: small;
+    .buttonD {
+        font-size: small;
 
-        }
-  }
-  
-  
+    }
+}
+

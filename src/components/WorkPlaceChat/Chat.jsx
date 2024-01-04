@@ -1,25 +1,40 @@
 import styles from './Chat.module.css'
-import React from 'react';
+import React, {useRef} from 'react';
 import Message from './ChatItems/Message';
 import ReceiverMessage from './ChatItems/ReceiverMessage';
 import AnswerMessage from './ChatItems/AnswerMessage';
 import AnswerReceiver from './ChatItems/AnswerReceiver';
 import DateMessage from './ChatItems/DateMessage';
 import IOSSettings from './IOSSettings';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import IOSChatSettings from './IOSChatSettings';
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import MessageRedactor from '../MessageRedactor/MessageRedactor';
-
-
+import {useDownloadChat} from "../../providers/DownloadChatProvider.jsx";
+import {
+    isMessageDate,
+    isMessageFromReceiver,
+    isMessageFromSender,
+    isMessageReply
+} from "../../utils/handleMessagesTypes.js";
 
 
 const Chat = () => {
-
     const darkTheme = useSelector((state) => state.settings.theme)
     const messages = useSelector((state) => state.settings.messages)
 
     const [modalActive, setModalActive] = useState(false);
+
+    // HINT: return type [actionType, messageInfo] | null. Action type can be: edit | reply
+    const [messageAction, setMessageAction] = useState(null)
+
+    const ref = useRef(null);
+
+    const {onSetChatRef} = useDownloadChat();
+
+    useEffect(() => {
+        onSetChatRef(ref)
+    }, [onSetChatRef])
 
     useEffect(() => {
         if (modalActive) {
@@ -33,71 +48,95 @@ const Chat = () => {
         };
     }, [modalActive]);
 
-
-
     const handleModalOpen = () => {
         setModalActive(true);
     }
 
+    const renderMessagesTypes = () => {
+        return messages.map(message => {
+            if (isMessageDate(message)) {
+                return <DateMessage
+                    id={message.id}
+                    key={message.id}
+                    mesDate={message.date.date}
+                    handleChangeMessageType={(actionType) => {
+                        setMessageAction([actionType, message])
+                        setModalActive(true)
+                    }}
+                />;
+            }
+
+            if (isMessageReply(message)) {
+                return <AnswerMessage
+                    id={message.id}
+                    key={message.id}
+                    mesText={message.text}
+                    mesTime={message.time}
+                    mesStatus={message.status}
+                    mesAnsweredId={null}
+                    mesAnsweredName={message.answer.name}
+                    mesAnsweredText={message.answer.answerText}
+                    handleChangeMessageType={(actionType) => {
+                        setMessageAction([actionType, message])
+                        setModalActive(true)
+                    }}
+                />;
+            }
+
+            if (isMessageFromSender(message)) {
+                return <Message
+                    id={message.id}
+                    key={message.id}
+                    mesText={message.text}
+                    mesTime={message.time}
+                    mesStatus={message.status}
+                    handleChangeMessageType={(actionType) => {
+                        setMessageAction([actionType, message])
+                        setModalActive(true)
+                    }}
+                />
+            }
+
+            if (isMessageFromReceiver(message)) {
+                return <ReceiverMessage
+                    id={message.id}
+                    key={message.id}
+                    mesText={message.text}
+                    mesTime={message.time}
+                    mesName={message.receiverName}
+                    handleChangeMessageType={(actionType) => {
+                        setMessageAction([actionType, message])
+                        setModalActive(true)
+                    }}
+                />
+            }
+
+            return <div>wrong message type</div>
+        })
+    }
 
     return (<>
-        {modalActive && <MessageRedactor active={modalActive} setActive={setModalActive} />}
+            {modalActive &&
+                <MessageRedactor active={modalActive} setActive={setModalActive} messageAction={messageAction}
+                                 setMessageAction={setMessageAction}
+                />}
 
-        <div className={styles.container}>
-            <header className={`${styles.header} ${darkTheme ? styles.darkH : ''}`}>
-                <IOSSettings />
-                <IOSChatSettings />
-            </header>
-            <main className={`${styles.chatbackground} ${darkTheme ? styles.darkC : ''}`}>
-
-                {messages.map(message => {
-
-                    return <Message key={message.id} mesText={message.text} mesTime={message.time} mesStatus={message.status} />;
-
-                })}
-
-                {messages.map(message => {
-
-                    return <ReceiverMessage key={message.id} mesText={message.text} mesTime={message.time} mesName={message.receiverName} />;
-
-                })}
-
-                {messages.map(message => {
-                    return <AnswerMessage key={message.id}
-                        mesText={message.text}
-                        mesTime={message.time}
-                        mesStatus={message.status}
-                        mesAnsweredId={null}
-                        mesAnsweredName={message.answer.name}
-                        mesAnsweredText={message.answer.answerText} />;
-                })}
-
-                {messages.map(message => {
-                    return <AnswerReceiver key={message.id}
-                        mesText={message.text}
-                        mesTime={message.time}
-                        mesName={message.receiverName}
-                        mesAnsweredId={null}
-                        mesAnsweredName={message.answer.name}
-                        mesAnsweredText={message.answer.answerText} />;
-                })}
-
-                {messages.map(message => {
-                    return <DateMessage key={message.id}
-                        mesDate={message.date.date} />;
-                })}
-
-            </main>
-            <footer>
-                <button
-                    className={`${styles.footerbutton} ${darkTheme ? styles.darkB : ''}`}
-                    onClick={handleModalOpen}></button>
-            </footer>
-        </div>
+            <div className={styles.container} ref={ref}>
+                <header className={`${styles.header} ${darkTheme ? styles.darkH : ''}`}>
+                    <IOSSettings/>
+                    <IOSChatSettings/>
+                </header>
+                <main className={`${styles.chatbackground} ${darkTheme ? styles.darkC : ''}`}>
+                    {renderMessagesTypes()}
+                </main>
+                <footer>
+                    <button className={`${styles.footerbutton} ${darkTheme ? styles.darkB : ''}`}
+                            onClick={handleModalOpen}/>
+                </footer>
+            </div>
 
 
-
-    </>
+        </>
     );
 };
 

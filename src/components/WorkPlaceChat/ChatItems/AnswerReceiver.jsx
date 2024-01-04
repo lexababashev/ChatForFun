@@ -7,10 +7,6 @@ const AnswerReceiver = ({ id, mesText,mesTime, mesName, mesAnsweredId, mesAnswer
     const darkTheme = useSelector((state) => state.settings.theme);
     const [isHovered, setIsHovered] = useState(false);
 
-
-
-
-
     return (
         <div className={styles.container}>
             <div className={`${styles.receiver_message} ${darkTheme ? styles.dark : ''}`}
