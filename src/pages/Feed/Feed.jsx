@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import styles from "./Feed.module.css";
 import {
     collection,
@@ -11,9 +11,10 @@ import {
     updateDoc,
     increment
 } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
-import { getAuth, onAuthStateChanged, deleteUser } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import {db} from "../../firebase/firebase";
+import {getAuth, onAuthStateChanged, deleteUser} from "firebase/auth";
+import {useNavigate} from "react-router-dom";
+import {ref, deleteObject, getStorage, list} from "firebase/storage";
 
 
 const Feed = () => {
@@ -66,9 +67,25 @@ const Feed = () => {
         });
     }, [auth]);
 
-    const handleDelete = async (docId) => {
+    const removeAllTheStorageImageByUserId = async (userId) => {
+        const storage = getStorage();
+        const imagesFolderRef = ref(storage, `shared/${userId}/`);
+
+        await list(imagesFolderRef).then((result) => {
+            result.items.forEach((itemRef) => {
+                deleteObject(itemRef).then(() => {
+                    console.log(`File ${itemRef.fullPath} deleted successfully`);
+                }).catch((error) => {
+                    console.error(`Error deleting file ${itemRef.fullPath}: `, error);
+                });
+            });
+        })
+    }
+
+    const handleDelete = async (docId, userId) => {
         const docRef = doc(db, "shared", docId);
         try {
+            await removeAllTheStorageImageByUserId(userId)
             await deleteDoc(docRef);
             setAllUsersData(allUsersData.filter((item) => item.docId !== docId));
             if (allUsersData.filter((item) => item.docId !== docId).length === 0) {
@@ -89,6 +106,7 @@ const Feed = () => {
             querySnapshot.forEach(async (doc) => {
                 await deleteDoc(doc.ref);
             });
+            await removeAllTheStorageImageByUserId(userId)
             setAllUsersData(allUsersData.filter((item) => item.userId !== userId));
 
             console.log(`Documents for userId ${userId} deleted successfully.`);
@@ -210,8 +228,6 @@ const Feed = () => {
         return <div className={styles.loginMessage}>You need to log in</div>;
     }
 
-    console.log(getCurrentUser, selectedUser, 'uniqueUserNames')
-
     return (
         <div className={styles.container}>
             <div className={styles.container}>
@@ -232,8 +248,8 @@ const Feed = () => {
                     </ul>
                 </div>
             </div>
-            {allUsersData.length > 0 ? <div className={styles.leftBlock}>
-                <div className={styles.searchContainer}>
+            <div className={styles.leftBlock}>
+                {allUsersData.length > 0 ? <div className={styles.searchContainer}>
                     <input
                         type="text"
                         placeholder="Search by tags..."
@@ -241,9 +257,9 @@ const Feed = () => {
                         onChange={handleSearchInputChange}
                         className={styles.searchInput}
                     />
-                </div>
+                </div> : <div className={styles.leftBlock} style={{height: '60vh'}}>Please, add some publications</div>}
 
-                {selectedUser === 'My Profile' && filteredData.length > 0 ?
+                {selectedUser === 'My Profile' ?
                     <div style={{
                         width: '100%',
                         display: 'flex',
@@ -252,29 +268,34 @@ const Feed = () => {
                         gap: '12px'
                     }}>
                         <button onClick={handleDeleteCurrentUser}
-                            style={{
-                                padding: '16px 12px',
-                                borderRadius: '6px',
-                                border: 'none',
-                                background: 'indianred',
-                                color: 'white',
-                                fontWeight: 'bold',
-                                textTransform: 'uppercase'
-                            }}>Delete
+                                style={{
+                                    padding: '16px 12px',
+                                    borderRadius: '6px',
+                                    border: 'none',
+                                    background: 'indianred',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    textTransform: 'uppercase',
+                                    cursor: 'pointer'
+                                }}>Delete
                             Profile
                         </button>
-                        <button onClick={() => deleteDocumentsForUserId(getCurrentUser.uid)}
-                            style={{
-                                padding: '16px 12px', borderRadius: '6px', border: 'none', background: 'indianred',
-                                color: 'white',
-                                fontWeight: 'bold',
-                                textTransform: 'uppercase'
-                            }}>Delete All
+                        {filteredData.length > 0 ? <button onClick={() => deleteDocumentsForUserId(getCurrentUser.uid)}
+                                                           style={{
+                                                               padding: '16px 12px',
+                                                               borderRadius: '6px',
+                                                               border: 'none',
+                                                               background: 'indianred',
+                                                               color: 'white',
+                                                               fontWeight: 'bold',
+                                                               textTransform: 'uppercase',
+                                                               cursor: 'pointer'
+                                                           }}>Delete All
                             Publications
-                        </button>
+                        </button> : null}
                     </div> : null}
 
-                <div
+                {allUsersData.length > 0 ? <div
                     className={`${styles.cardsList} ${selectedUser === 'All Users' ? styles.cardsListAllUsers : styles.cardsListMyProfile}`}>
                     {filteredData.map((data) => (
                         <div key={data.docId} className={styles.card}>
@@ -297,9 +318,9 @@ const Feed = () => {
                                 </button>
                                 <span className={styles.likeCount}>{data.likes || 0}</span>
                             </div> : null}
-                            {user && user.uid === data.userId && (
+                            {selectedUser === "My Profile" && user && user.uid === data.userId && (
                                 <button
-                                    onClick={() => handleDelete(data.docId)}
+                                    onClick={() => handleDelete(data.docId, user.uid)}
                                     className={styles.deleteButton}
                                 >
                                     Delete
@@ -307,8 +328,8 @@ const Feed = () => {
                             )}
                         </div>
                     ))}
-                </div>
-            </div> : <div className={styles.leftBlock} style={{ height: '60vh' }}>Please, add some publications</div>}
+                </div> : null}
+            </div>
         </div>
     );
 };

@@ -1,10 +1,10 @@
 import styles from "./FooterButtons.module.css";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDownloadChat} from "../../providers/DownloadChatProvider.jsx";
 import {useDispatch} from "react-redux";
 
 import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
-import {collection, addDoc} from "firebase/firestore";
+import {collection} from "firebase/firestore";
 import {db, storage} from "../../firebase/firebase";
 import {getAuth} from "firebase/auth";
 import {doc, setDoc} from "firebase/firestore";
@@ -13,19 +13,14 @@ import {resetSettings} from "../../reducers/settingsReducer.js";
 
 const FooterButtons = () => {
     const dispatch = useDispatch()
-    const [loginPrompt, setLoginPrompt] = useState("");
     const [openChatTags, setOpenChatTags] = useState(false)
 
     const {downloadPng, getShareChatImageURL} = useDownloadChat();
-    const auth = getAuth();
-    const user = auth.currentUser;
+
     const handleShareChat = async (tags) => {
-
-
-        if (!user) {
-            setLoginPrompt("You need to log in first to share a chat.");
-            return;
-        }
+        const auth = getAuth();
+        const user = auth.currentUser;
+        
         const userId = user.uid;
         const shareImageUrl = await getShareChatImageURL();
 
@@ -56,6 +51,18 @@ const FooterButtons = () => {
         });
     };
 
+    const handlePermission = () => {
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        if (!user) {
+            alert('You need to log in first to share a chat.')
+            return;
+        }
+
+        setOpenChatTags(true)
+    }
+
     return (
         <>
             {openChatTags ?
@@ -66,18 +73,8 @@ const FooterButtons = () => {
                     <p>Download Chat</p>
                 </button>
 
-                <button className={styles.buttonD} onClick={handleShareChat}>
-                    {loginPrompt ? (
-                        <div className={styles.loginPrompt}>{loginPrompt}</div>
-                    ) : (
-                        <p onClick={() => {
-                            if(!user){
-                                return;
-                            }
-                            setOpenChatTags(true)
-                        
-                        }}>Share Chat</p>
-                    )}
+                <button className={styles.buttonD} onClick={handlePermission}>
+                    <p>Share Chat</p>
                 </button>
 
                 <button className={styles.buttonD} onClick={() => dispatch(resetSettings())}>

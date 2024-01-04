@@ -19,14 +19,13 @@
     color: azure;
     font-size: 35px;
 
-    width:420px ;
+    width: 270px;
     text-align: right;
   }
   
   .signIn{
-    margin:10px;
+    margin:14px;
     margin-right: 28px;
-    margin-left: 240px;
   }
 
   .signInBtn {

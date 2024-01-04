@@ -14,7 +14,10 @@ const DownloadChatProvider = ({children}) => {
         if (chatRef.current === null) {
             return
         }
-        return toPng(chatRef.current, { cacheBust: true, })
+
+        return toPng(chatRef.current, {
+            cacheBust: true,
+        })
             .then(dataUrl => dataUrl)
             .catch((err) => {
                 console.log(err)
@@ -25,7 +28,7 @@ const DownloadChatProvider = ({children}) => {
         if (chatRef.current === null) {
             return
         }
-        toPng(chatRef.current, { cacheBust: true, })
+        toPng(chatRef.current, {})
             .then((dataUrl) => {
                 const link = document.createElement('a')
                 link.download = `name of the png image`

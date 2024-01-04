@@ -16,7 +16,7 @@ const initialState = {
         time: '12:00',
         isSender: false,
         status: 'read',
-        receiverName: 'Name',
+        receiverName: '',
         answer: {
             isAnswer: false,
             answerId: null,

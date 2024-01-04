@@ -74,7 +74,6 @@ const MessageRedactor = ({active, setActive, messageAction, setMessageAction}) =
             setMessage(prevMessageInfo => ({...prevMessageInfo, date: {isDate: true, date: value}}))
             return;
         } else {
-            console.log(name, value)
             setMessage(prevMessageInfo => ({...prevMessageInfo, [name]: value}))
         }
     }
