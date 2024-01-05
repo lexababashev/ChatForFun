@@ -154,11 +154,12 @@ const MessageRedactor = ({active, setActive, messageAction, setMessageAction}) =
                     }
 
                     if (isReplyType) {
+                        console.log('here')
                         dispatch(handleReplyOnMessage({
                             ...editedNewSenderMessage, answer: {
                                 isAnswer: true,
                                 answerId: id,
-                                name: 'You',
+                                name: receiverName ? receiverName : 'You',
                                 answerText: messageAction[1].text,
                             }
                         }))

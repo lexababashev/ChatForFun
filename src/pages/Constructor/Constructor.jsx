@@ -6,15 +6,16 @@ import DownloadChatProvider from "../../providers/DownloadChatProvider.jsx";
 
 const Constructor = () => {
 
-  return (
-    <>
-        <DownloadChatProvider>
-          <Settings />
-          <WorkPlaceChat />
-          <FooterButtons />
-        </DownloadChatProvider>
-    </>
-  )
+    return (
+        <>
+            <DownloadChatProvider>
+                <Settings/>
+                <WorkPlaceChat/>
+                <FooterButtons/>
+            </DownloadChatProvider>
+        </>
+    )
 };
+
 
 export default Constructor;

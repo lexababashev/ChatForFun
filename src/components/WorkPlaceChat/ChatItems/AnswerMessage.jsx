@@ -14,6 +14,7 @@ const AnswerMessage = ({
                            mesText,
                            mesTime,
                            mesStatus,
+                           isSender,
                            mesAnsweredId,
                            mesAnsweredName,
                            mesAnsweredText,
@@ -41,7 +42,11 @@ const AnswerMessage = ({
     return (
         <div className={styles.container}>
             <div className={`${styles.sender_message} ${darkTheme ? styles.dark : ''}`}
-                 onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+                 onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}
+                 style={{
+                     alignSelf: isSender ? 'flex-end' : 'flex-start'
+                 }}
+            >
 
                 <div className={`${styles.answer_sender}`}>
                     <div className={`${styles.leftLine} ${darkTheme ? styles.darkLine : ''}`}></div>

@@ -55,14 +55,20 @@ const IOSChatSettings = () => {
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
+
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSelectedImage(reader.result);
-            };
-            reader.readAsDataURL(file);
+            if (file.type === 'image/png' || file.type === 'image/svg+xml') {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setSelectedImage(reader.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Invalid file type. Please choose a PNG or SVG image.');
+            }
         }
     };
+
 
     const handleClick = () => {
         document.getElementById("fileInput").click();
@@ -95,7 +101,7 @@ const IOSChatSettings = () => {
                         backgroundImage: selectedImage ? `url(${selectedImage})` : "none",
                         backgroundSize: 'cover'
                     }}
-                ></button>
+                />
             </div>
 
 
