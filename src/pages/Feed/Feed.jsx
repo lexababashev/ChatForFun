@@ -85,7 +85,7 @@ const Feed = () => {
     const handleDelete = async (docId, userId) => {
         const docRef = doc(db, "shared", docId);
         try {
-            await removeAllTheStorageImageByUserId(userId)
+            //await removeAllTheStorageImageByUserId(userId)
             await deleteDoc(docRef);
             setAllUsersData(allUsersData.filter((item) => item.docId !== docId));
             if (allUsersData.filter((item) => item.docId !== docId).length === 0) {
