@@ -65,8 +65,8 @@ const MessageRedactor = ({active, setActive, messageAction, setMessageAction}) =
     const handleMessageChange = (event) => {
         const {name, value} = event.target;
 
-        if (value.length >= 120) {
-            alert('You have reached maximum limit of 120 characters')
+        if (value.length >= 70) {
+            alert('You have reached maximum limit of 60 characters')
             return;
         }
 

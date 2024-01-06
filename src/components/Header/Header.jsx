@@ -54,8 +54,10 @@ const Header = () => {
                             fontWeight: 'bold',
                             color: 'white',
                             letterSpacing: '1.2px',
-                            textTransform: 'uppercase'
-                        }}>Welcome, {user.displayName}</div>
+                            textTransform: 'uppercase',
+                            fontSize: '14px',
+                            width: 'fit-content'
+                        }}>{user.displayName}</div>
                         <button className="signOutBtn" onClick={handleLogout}
                                 style={{padding: '12px', borderRadius: '6px', border: 'none', cursor: 'pointer'}}>
                             Logout

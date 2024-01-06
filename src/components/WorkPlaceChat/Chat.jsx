@@ -52,10 +52,6 @@ const Chat = () => {
         setModalActive(true);
     }
 
-    useEffect(() => {
-        console.log(messages, 'messages')
-    }, [messages])
-
     const renderMessagesTypes = () => {
         return messages.map(message => {
             if (isMessageDate(message)) {
@@ -71,7 +67,24 @@ const Chat = () => {
             }
 
             if (isMessageReply(message)) {
-                return <AnswerMessage
+                if (message.isSender) {
+                    return <AnswerMessage
+                        id={message.id}
+                        isSender={message.isSender}
+                        key={message.id}
+                        mesText={message.text}
+                        mesTime={message.time}
+                        mesStatus={message.status}
+                        mesAnsweredId={null}
+                        mesAnsweredName={message.answer.name}
+                        mesAnsweredText={message.answer.answerText}
+                        handleChangeMessageType={(actionType) => {
+                            setMessageAction([actionType, message])
+                            setModalActive(true)
+                        }}
+                    />;
+                }
+                return <AnswerReceiver
                     id={message.id}
                     isSender={message.isSender}
                     key={message.id}
@@ -84,9 +97,10 @@ const Chat = () => {
                     handleChangeMessageType={(actionType) => {
                         setMessageAction([actionType, message])
                         setModalActive(true)
-                    }}
-                />;
+                    }}/>
+
             }
+
 
             if (isMessageFromSender(message)) {
                 return <Message

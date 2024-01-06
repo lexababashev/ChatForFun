@@ -4,71 +4,72 @@
     align-items: center;
     background-color: hsl(0, 0%, 22%);
     height: 90px;
-  }
-  
-  .logo{
+}
+
+.logo {
     width: 3rem;
     height: 3rem;
     margin-left: 28px;
     display: flex;
     justify-content: center;
     text-align: center;
-  }
+}
 
-  .projectName {
+.projectName {
     color: azure;
     font-size: 35px;
+    text-align: center;
+    width: fit-content;
+}
 
-    width: 270px;
-    text-align: right;
-  }
-  
-  .signIn{
-    margin:14px;
+.signIn {
+    margin: 14px;
     margin-right: 28px;
-  }
+}
 
-  .signInBtn {
+.signInBtn {
     padding: 0px 20px;
-    height:50px;
+    height: 50px;
     border: none;
     border-radius: 10px;
     background-color: #16056b;
     color: azure;
     cursor: pointer;
     font-size: 12px;
-  }
-  
-  .signInBtn:hover {
-    background-color: #2980b9;
-  }
+}
 
-  .g{
+.signInBtn:hover {
+    background-color: #2980b9;
+}
+
+.g {
     margin-left: 3px;
     color: #4285F4;
     font-weight: bold;
-  }
+}
 
-  .o{
+.o {
     color: #DB4437;
     font-weight: bold;
-  }
-  .o2{
+}
+
+.o2 {
     color: #F4B400;
     font-weight: bold;
-  }
-  .g2{
+}
+
+.g2 {
     color: #4285F4;
     font-weight: bold;
-  }
-  .l{
+}
+
+.l {
     color: #0F9D58;
     font-weight: bold;
-  }
-  
-  .e{
+}
+
+.e {
     color: #DB4437;
     font-weight: bold;
-  }
+}
 
-  

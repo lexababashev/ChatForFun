@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./Feed.module.css";
 import {
     collection,
@@ -9,17 +9,19 @@ import {
     doc,
     deleteDoc,
     updateDoc,
-    increment
+    increment,
+    limit,
+    startAfter,
+    endBefore
 } from "firebase/firestore";
-import {db} from "../../firebase/firebase";
-import {getAuth, onAuthStateChanged, deleteUser} from "firebase/auth";
-import {useNavigate} from "react-router-dom";
-import {ref, deleteObject, getStorage, list} from "firebase/storage";
+import { db } from "../../firebase/firebase";
+import { getAuth, onAuthStateChanged, deleteUser } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { ref, deleteObject, getStorage, list } from "firebase/storage";
 
 
 const Feed = () => {
     const [allUsersData, setAllUsersData] = useState([]);
-    const [userNames, setUserNames] = useState([]);
     const [selectedUser, setSelectedUser] = useState("All Users");
     const navigate = useNavigate();
 
@@ -47,7 +49,6 @@ const Feed = () => {
         }
 
         return sortedData.filter((item) => {
-            // Check if any tag includes the search query
             return item.tags !== null && item.tags.some((tag) =>
                 tag.toLowerCase().includes(searchQuery.toLowerCase())
             );
@@ -62,7 +63,6 @@ const Feed = () => {
             setUser(authUser);
             if (authUser) {
                 fetchData();
-                fetchUserNames();
             }
         });
     }, [auth]);
@@ -102,7 +102,6 @@ const Feed = () => {
             const q = query(sharedCollectionRef, where('userId', '==', userId));
             const querySnapshot = await getDocs(q);
 
-            // Delete each document
             querySnapshot.forEach(async (doc) => {
                 await deleteDoc(doc.ref);
             });
@@ -138,6 +137,7 @@ const Feed = () => {
         try {
             await deleteUser(getCurrentUser)
             await deleteSingleUserByUid(getCurrentUser.uid)
+            await deleteDocumentsForUserId(getCurrentUser.uid)
             navigate('/')
         } catch {
             alert('Please re-login and try again. To delete a user, the user must have signed in recently.')
@@ -167,70 +167,38 @@ const Feed = () => {
             const docSnapshot = await getDoc(docRef);
             const postData = docSnapshot.data();
 
-            // Check if the current user already liked the post
             if (postData.peopleWhoLiked && postData.peopleWhoLiked.includes(getCurrentUser.uid)) {
-                // If user already liked, remove like
                 await updateDoc(docRef, {
                     likes: increment(-1),
                     peopleWhoLiked: postData.peopleWhoLiked.filter(uid => uid !== getCurrentUser.uid)
                 });
             } else {
-                // If user hasn't liked, add like
                 await updateDoc(docRef, {
                     likes: increment(1),
                     peopleWhoLiked: [...(postData.peopleWhoLiked || []), getCurrentUser.uid]
                 });
             }
 
-            // Fetch data again after updating likes
-            fetchData(selectedUser);
+            await fetchData(selectedUser);
         } catch (error) {
             console.error("Error updating likes: ", error);
         }
     };
 
-    const fetchUserNames = async () => {
-        const sharedCollectionRef = collection(db, "shared");
-        const querySnapshot = await getDocs(sharedCollectionRef);
-        const users = new Set(); // Using Set to ensure uniqueness
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            users.add({
-                userId: data.userId,
-                userName: data.userName,
-                userProfileImage: data.userProfileImage,
-            });
-        });
-        setUserNames(Array.from(users));
-    };
-
-
-    const handleUserFilterChange = (e) => {
-        setSelectedUser(e.target.value);
-        fetchData(e.target.value);
-    };
-
-    const handleUserSelect = (user, userId) => {
+    const handleUserSelect = async (user, userId) => {
         setSelectedUser(user);
-        fetchData(userId);
+        await fetchData(userId);
     };
-
-    const uniqueUserNames = Array.from(
-        new Set(userNames.map((user) => user.userId))
-    ).map((userId) => {
-        // Find the first user object with this unique userName
-        const user = userNames.find((user) => user.userId === userId);
-
-        return user;
-    }).filter(u => user ? u.userId === user.uid : false)
 
     if (!getCurrentUser && allUsersData.length === 0) {
         return <div className={styles.loginMessage}>You need to log in</div>;
     }
 
+    console.log(allUsersData, 'filteredData')
+
     return (
-        <div className={styles.container}>
-            <div className={styles.container}>
+        <div className={styles.container} style={{ minHeight: '180px' }}>
+            <div className={styles.container} style={{ minWidth: '300px' }}>
                 <div className={styles.dropdownContainer}>
                     <ul className={styles.dropdownList}>
                         <li
@@ -256,20 +224,53 @@ const Feed = () => {
                         value={searchQuery}
                         onChange={handleSearchInputChange}
                         className={styles.searchInput}
+                        style={{
+                            maxWidth: '600px',
+                            height: '60px',
+                            borderRadius: '6px'
+                        }}
                     />
-                </div> : <div className={styles.leftBlock} style={{height: '60vh'}}>Please, add some publications</div>}
+                </div> : selectedUser === "All Users" ?
+                    <span className={styles.addSomePublication}>Please, add some publications</span> : null}
 
-                {selectedUser === 'My Profile' ?
-                    <div style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                        gap: '12px'
-                    }}>
-                        <button onClick={handleDeleteCurrentUser}
+                <div style={{
+                    width: '100%',
+                    display: 'flex',
+                    gap: '40px',
+                    margin: selectedUser === "My Profile" ? "24px" : '0px'
+                }}>
+                    {selectedUser === 'My Profile' && getCurrentUser ?
+                        <div style={{ display: 'flex', alignItems: 'center', padding: '16px 0', gap: '6px' }}>
+                            <img
+                                src={getCurrentUser.photoURL}
+                                alt={getCurrentUser.displayName}
+                                className={styles.userImage}
                                 style={{
-                                    padding: '16px 12px',
+                                    width: '75px',
+                                    height: '75px',
+                                }}
+                            />
+                            <div className={styles.userName}
+                                style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}
+                            >
+                                <div style={{ fontSize: '32px' }}>
+                                    {getCurrentUser.displayName}
+                                </div>
+                                <div style={{ fontSize: '14px' }}>
+                                    All
+                                    likes: {allUsersData ? allUsersData.reduce((a, b) => a + b.likes, 0) : null}</div>
+                            </div>
+                        </div> : null}
+                    {selectedUser === 'My Profile' ?
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'flex-start',
+                            gap: '12px',
+                        }}>
+                            <button onClick={handleDeleteCurrentUser}
+                                style={{
+                                    padding: '12px 14px',
                                     borderRadius: '6px',
                                     border: 'none',
                                     background: 'indianred',
@@ -277,47 +278,75 @@ const Feed = () => {
                                     fontWeight: 'bold',
                                     textTransform: 'uppercase',
                                     cursor: 'pointer'
-                                }}>Delete
-                            Profile
-                        </button>
-                        {filteredData.length > 0 ? <button onClick={() => deleteDocumentsForUserId(getCurrentUser.uid)}
-                                                           style={{
-                                                               padding: '16px 12px',
-                                                               borderRadius: '6px',
-                                                               border: 'none',
-                                                               background: 'indianred',
-                                                               color: 'white',
-                                                               fontWeight: 'bold',
-                                                               textTransform: 'uppercase',
-                                                               cursor: 'pointer'
-                                                           }}>Delete All
-                            Publications
-                        </button> : null}
-                    </div> : null}
+                                }}>
+                                Delete Profile
+                            </button>
+                            {filteredData.length > 0 ?
+                                <button onClick={() => deleteDocumentsForUserId(getCurrentUser.uid)}
+                                    style={{
+                                        padding: '12px 14px',
+                                        borderRadius: '6px',
+                                        border: 'none',
+                                        background: 'indianred',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        textTransform: 'uppercase',
+                                        cursor: 'pointer'
+                                    }}>Delete All
+                                    Publications
+                                </button> : null}
+                        </div> : null}
+                </div>
+
+                {selectedUser === "My Profile" && allUsersData.length === 0 ? <div className={styles.addSomePublication}
+                    style={{
+                        width: '100%',
+                        justifyContent: 'flex-start'
+                    }}>Please, add
+                    some
+                    publications
+                </div> : null}
 
                 {allUsersData.length > 0 ? <div
                     className={`${styles.cardsList} ${selectedUser === 'All Users' ? styles.cardsListAllUsers : styles.cardsListMyProfile}`}>
                     {filteredData.map((data) => (
                         <div key={data.docId} className={styles.card}>
-                            <div className={styles.userInfo}>
+                            {selectedUser === "All Users" ? <div className={styles.userInfo}>
                                 <img
                                     src={data.userProfileImage}
                                     alt={data.userName}
                                     className={styles.userImage}
                                 />
                                 <p className={styles.userName}>{data.userName}</p>
-                            </div>
+                            </div> : null}
                             <img
                                 src={data.imageUrl}
                                 alt="Shared content"
                                 className={styles.image}
                             />
-                            {selectedUser === "All Users" ? <div className={styles.likeSection}>
-                                <button onClick={() => handleLike(data.docId)}>
-                                    <span className={styles.likeIcon}>👍</span> Like
-                                </button>
-                                <span className={styles.likeCount}>{data.likes || 0}</span>
-                            </div> : null}
+                            {selectedUser === "All Users" ?
+                                <div className={styles.likeSection}>
+                                    <div onClick={() => handleLike(data.docId)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                                            version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 -40 112.88 170.41"
+                                            style={{
+                                                fill: data.peopleWhoLiked.includes(getCurrentUser.uid) ? 'red' : 'none',
+                                                width: '35px',
+                                                height: '35px',
+                                                cursor: 'pointer'
+                                            }} xml:space="preserve">
+                                            <g><path style={{
+                                                stroke: 'black',
+                                                strokeWidth: data.peopleWhoLiked.includes(getCurrentUser.uid) ? '0px' : '6px'
+                                            }} d="M60.83,17.19C68.84,8.84,74.45,1.62,86.79,0.21c23.17-2.66,44.48,21.06,32.78,44.41 c-3.33,6.65-10.11,14.56-17.61,22.32c-8.23,8.52-17.34,16.87-23.72,23.2l-17.4,17.26L46.46,93.56C29.16,76.9,0.95,55.93,0.02,29.95 C-0.63,11.75,13.73,0.09,30.25,0.3C45.01,0.5,51.22,7.84,60.83,17.19L60.83,17.19L60.83,17.19z" /></g></svg>
+                                    </div>
+                                    <span
+                                        style={{ fontWeight: 'bold', fontSize: '16px' }}
+                                        className={styles.likeCount}>
+                                        {data.likes || 0} Likes
+                                    </span>
+                                </div> : null}
                             {selectedUser === "My Profile" && user && user.uid === data.userId && (
                                 <button
                                     onClick={() => handleDelete(data.docId, user.uid)}

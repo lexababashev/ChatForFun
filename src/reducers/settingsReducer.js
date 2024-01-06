@@ -9,7 +9,8 @@ const initialState = {
     name: 'Joe Done!',
     status: 'Online',
     numberOfMessages: '111',
-
+    profileUrl: '',
+    
     messages: [
         {
             id: 0,
@@ -87,7 +88,11 @@ const settingsReducer = createSlice({
         changeNumberOfMessages: (state, action) => {
             state.numberOfMessages = action.payload;
         },
-
+        changeProfileUrl: (state, action) => {
+            state.profileUrl = action.payload;
+        },
+        
+        
         resetSettings: (state, action) => {
             return initialState
         },
@@ -196,7 +201,8 @@ export const {
     changeBattery,
     changeName,
     changeStatus,
-    changeNumberOfMessages
+    changeNumberOfMessages,
+    changeProfileUrl,
 } = settingsReducer.actions;
 
 export default settingsReducer.reducer;

@@ -35,7 +35,8 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    width: 400px;
+    width: 100%;
+    max-width: 400px;
 }
 
 .cardsList {
@@ -54,6 +55,16 @@
     flex-direction: row;
     align-items: flex-start;
     width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+
+.addSomePublication {
+    gap: 16px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .leftBlock,
@@ -62,6 +73,8 @@
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
     padding: 20px;
     border-radius: 12px;
     background: #ffffff;
@@ -136,7 +149,7 @@
 
 .dropdownContainer {
     position: relative;
-    width: 200px; /* Adjust as needed */
+    width: 100%;
     cursor: pointer;
 }
 
@@ -152,6 +165,8 @@
 }
 
 .dropdownList {
+    overflow: hidden;
+
     position: absolute;
     width: 100%;
     background-color: #fff;
@@ -165,14 +180,17 @@
 }
 
 .dropdownItem {
-    padding: 10px;
     display: flex;
     align-items: center;
     transition: background-color 0.2s;
 }
 
+.dropdownItem span {
+    padding: 16px 24px;
+}
+
 .activeDropdownItem span {
-    text-decoration: underline;
+    background: lightblue;
 }
 
 .dropdownItem:hover {
@@ -211,6 +229,8 @@
     display: flex;
     align-items: center;
     margin-top: 10px;
+    gap: 2px;
+
 }
 
 .likeButton {

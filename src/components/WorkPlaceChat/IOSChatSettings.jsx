@@ -2,14 +2,13 @@ import styles from './IOSChatSettings.module.css'
 import React, {useState} from 'react';
 
 import {useDispatch, useSelector} from 'react-redux';
-import {changeName, changeStatus, changeNumberOfMessages} from '../../reducers/settingsReducer';
+import {changeName, changeStatus, changeNumberOfMessages, changeProfileUrl} from '../../reducers/settingsReducer';
 
 const IOSChatSettings = () => {
     const dispatch = useDispatch();
-    const [selectedImage, setSelectedImage] = useState(null);
-
 
     const userName = useSelector((state) => state.settings.name);
+    const profileUrl = useSelector((state) => state.settings.profileUrl);
     const userStatus = useSelector((state) => state.settings.status);
     const numberOfMessages = useSelector((state) => state.settings.numberOfMessages);
     const darkTheme = useSelector((state) => state.settings.theme);
@@ -60,7 +59,7 @@ const IOSChatSettings = () => {
             if (file.type === 'image/png' || file.type === 'image/svg+xml') {
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                    setSelectedImage(reader.result);
+                    dispatch(changeProfileUrl(reader.result))
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -98,7 +97,7 @@ const IOSChatSettings = () => {
                     className={`${styles.user_avatar_button} user-avatar`}
                     onClick={handleClick}
                     style={{
-                        backgroundImage: selectedImage ? `url(${selectedImage})` : "none",
+                        backgroundImage: profileUrl ? `url(${profileUrl})` : "none",
                         backgroundSize: 'cover'
                     }}
                 />
