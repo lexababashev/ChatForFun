@@ -33,7 +33,7 @@ const initialState = {
             time: '12:00',
             isSender: false,
             status: 'read',
-            receiverName: 'Name1',
+            receiverName: 'Name',
             answer: {
                 isAnswer: false,
                 answerId: null,
